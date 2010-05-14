@@ -14,17 +14,17 @@ HandlerQueue := Object clone do(
 	processQueue := method(
 		setCoro(Coroutine currentCoroutine)
 		loop(
-			writeln("processQueue")
+			//writeln("processQueue")
 			if(queue isEmpty not and inProcess < concurrencyLimit) then(
 				handler := queue removeAt(0)
-				writeln("processQueue handleRequest")
+				//writeln("processQueue handleRequest")
 				handler @handleRequest
 				inProcess = inProcess + 1
 			) else(
 				if(paused not,
 					setPaused(true)
 				)
-				writeln("pause")
+				//writeln("pause")
 				coro pause
 			)
 		)
@@ -41,11 +41,11 @@ HandlerQueue := Object clone do(
 		handler setHandlerQueue(self)
 		handler setSocket(socket)
 		if(inProcess < concurrencyLimit) then(
-			writeln("enqueue handleRequest")
+			//writeln("enqueue handleRequest")
 			inProcess = inProcess + 1
 			handler @handleRequest
 		) else(
-			writeln("enqueue")
+			//writeln("enqueue")
 			queue append(handler)
 			?Logger info("Volcano HandlerQueue is full: ", concurrencyLimit, " active and ", queue size, " queued")
 			resumeIfNeeded
@@ -64,7 +64,7 @@ HandlerQueue := Object clone do(
 			handler reset
 			recycledHandlers append(handler)
 		)
-		writeln("requestCompleted")
+		//writeln("requestCompleted")
 		inProcess = inProcess - 1
 		resumeIfNeeded
 		server ?requestCompleted

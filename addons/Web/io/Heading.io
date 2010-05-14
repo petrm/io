@@ -1,5 +1,5 @@
 Heading := Element clone do(
-    tag := "h"
+    tag := "h1"
 
     huge := method(
         tag = "h6"

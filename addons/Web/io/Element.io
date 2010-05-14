@@ -27,7 +27,7 @@ Element := Object clone do(
     )
 
     dir := method(value,
-        if(list("ltr", "rtl") contains value,
+        if(list("ltr", "rtl") contains(value),
             attributes atPut("dir", value)
         )
         return self
@@ -49,6 +49,11 @@ Element := Object clone do(
 
     title := method(value,
         attributes atPut("title", value)
+        return self
+    )
+
+    br := method(value,
+        children append(Br clone)
         return self
     )
 
@@ -111,13 +116,17 @@ Element := Object clone do(
         if(children size > 0) then(
             out = out .. ("<#{tag}#{attrString}>" interpolate)
             children foreach(i, child,
-                e := try(out = child render(out))
-                e catch(Exception, out := out .. child)
+                if(child hasSlot("render"),
+                    out = child render(out),
+                    out = out .. child
+                )
+                //e := try(out = child render(out))
+                //e catch(Exception, out := out .. child)
             )
-            out = out .. "</#{tag}>" interpolate
+            out = out .. ("</#{tag}>\n" interpolate)
         ) else(
-            out = out .. "<#{tag} #{attrString}/>" interpolate
+            out = out .. ("<#{tag}#{attrString} />\n" interpolate)
         )
-        return out
+        return out asUTF8
     )
 )

@@ -1,9 +1,16 @@
 Script := Element clone do(
     tag := "script"
 
-    type := method(value,
-        attributes atPut("type", value)
-        return self
+    with := method(
+        s := self clone
+        if(call message arguments size == 0,
+            s children append(""),
+            call message arguments foreach(arg,
+                s children append(call sender doMessage(arg))
+            )
+        )
+        s attributes atPut("type", "text/javascript")
+        return s
     )
 
     charset := method(value,
@@ -21,9 +28,20 @@ Script := Element clone do(
         return self
     )
 
+    file := method(value,
+        f := File openForReading(value)
+        children append(f contents)
+        f close
+        return self
+    )
+
+    path := method(value,
+        attributes atPut("src", value)
+        return self
+    )
+
     xmlspace := method(value,
         attributes atPut("xml:space", value)
         return self
     )
-
 )

@@ -24,7 +24,7 @@ Form := Element clone do(
     enctype := method(value,
         if(list("application/x-www-form-urlencoded",
                 "multipart/form-data",
-                "text/plain") contains value,
+                "text/plain") contains(value),
             attributes atPut("enctype", value)
         )
         return self
