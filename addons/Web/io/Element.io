@@ -1,5 +1,7 @@
 Element := Object clone do(
     tag := ""
+    lt := "&lt;"
+    gt := "&gt;"
 
     iso639 := list("ab", "aa", "af", "sq", "am", "ar", "hy", "as", "ay", "az", "ba", "eu", "bn", "dz", "bh", "bi", "br", "bg", "my", "be", "km", "ca", "zh", "zh", "co", "hr", "cs", "da", "nl", "en", "eo", "et", "fo", "fa", "fj", "fi", "fr", "fy", "gl", "gd", "gv", "ka", "de", "el", "kl", "gn", "gu", "ha", "he", "iw", "hi", "hu", "is", "id", "in", "ia", "ie", "iu", "ik", "ga", "it", "ja", "jv", "kn", "ks", "kk", "rw", "ky", "rn", "ko", "ku", "lo", "la", "lv", "li", "ln", "lt", "mk", "mg", "ms", "ml", "mt", "mi", "mr", "mo", "mn", "na", "ne", "no", "oc", "or", "om", "ps", "pl", "pt", "pa", "qu", "rm", "ro", "ru", "sm", "sg", "sa", "sr", "sh", "st", "tn", "sn", "sd", "si", "ss", "sk", "sl", "so", "es", "su", "sw", "sv", "tl", "tg", "ta", "tt", "te", "th", "bo", "ti", "to", "ts", "tr", "tk", "tw", "ug", "uk", "ur", "uz", "vi", "vo", "cy", "wo", "xh", "yi", "ji", "yo", "zu")
     
@@ -11,7 +13,11 @@ Element := Object clone do(
     with := method(
         s := self clone
         call message arguments foreach(arg,
-            s children append(call sender doMessage(arg))
+            child := call sender doMessage(arg)
+            if(child protos contains(List),
+                s children = child,
+                s children append(child)
+            )
         )
         return s
     )
