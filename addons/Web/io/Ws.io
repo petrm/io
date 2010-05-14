@@ -4,12 +4,13 @@ Logging
 WsRequestHandler := Object clone do(
     logger := Logging getLogger("Ws::handler")
     handleRequest := method(request, response,
-        if(request path split("/") last split(".") last == "png") then(
+        //serve static content
+        pSuffix := request path split("/") last split(".") last
+        if(request path == "/kill") then(
+            Ws stop
+        ) elseif(pSuffix != nil and Ws staticContent hasKey(pSuffix)) then(
             e := try(
-                path := System launchScript split("/")
-                path removeLast
-                path := path join("/")
-                f := File openForReading(path .. "/static/" .. request path split("/") last)
+                f := File openForReading(Ws staticPath .. request path split("/") last)
                 response data = f contents
                 f close
                 response statusCode := 200
@@ -18,16 +19,16 @@ WsRequestHandler := Object clone do(
             )
             e catch(Exception,
                 logger error(e error)
-                response data = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" .. Doctype xhtml .. "404 Not Found"
-                response statusCode := 404
-                response responseMessage := "Not Found"
-                response headers atPut("Content-Type", "text/html; charset=utf-8")
+                response = Ws error404(response)
             )
-        ) else(
-            response data = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" .. Doctype xhtml .. app render
+        //serve html
+        ) elseif(Ws urls keys contains(request path)) then(
+            response data =  Doctype xhtml .. Ws urls at(request path) render
             response statusCode := 200
             response responseMessage := "OK"
             response headers atPut("Content-Type", "text/html; charset=utf-8")
+        ) else(
+            response = Ws error404(response)
         )
         response asyncSend
         logHost := request headers at("host")
@@ -44,6 +45,28 @@ WsRequestHandler := Object clone do(
 Ws := EvHttpServer clone do(
     logger := Logging getLogger("Ws")
     logger info("Starting HTTP server")
-) setHost("0.0.0.0") setPort(8090) setRequestHandlerProto(WsRequestHandler) run
-Coroutine currentCoroutine pause
-loop(yield)
+    staticPath := System launchScript split("/")
+    staticPath removeLast
+    staticPath = staticPath join("/") .. "/static/"
+    logger info("Default static path: " .. staticPath)
+    staticContent := Map with("png", "image/png",
+                              "jpg", "image/jpeg",
+                              "css", "text/css",
+                              "js", "application/x-javascript")
+    urls := Map clone
+
+    error404 := method(response,
+        response data = Doctype xhtml .. "404 Not Found"
+        response statusCode := 404
+        response responseMessage := "Not Found"
+        response headers atPut("Content-Type", "text/html; charset=utf-8")
+        return response
+    )
+
+    run := method(
+        super(run)
+        Coroutine currentCoroutine pause
+        //loop(yield)
+    )
+) setHost("0.0.0.0") setPort(8090) setRequestHandlerProto(WsRequestHandler)
+

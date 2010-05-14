@@ -29,9 +29,14 @@ Script := Element clone do(
     )
 
     file := method(value,
-        f := File openForReading(value)
-        children append(f contents)
-        f close
+        e := try(
+            f := File openForReading(value)
+            children append(f contents)
+            f close
+        )
+        e catch(Exception,
+            logger error(e error)  
+        )
         return self
     )
 

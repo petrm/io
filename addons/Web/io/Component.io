@@ -20,7 +20,8 @@ Component := Element clone do(
                         out = out .. child
                     )
                 )
-                cache == out
+                cache = out asUTF8
+                out = out asUTF8
             ) else (
                 out = cache
             )
