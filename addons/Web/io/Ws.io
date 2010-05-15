@@ -66,7 +66,7 @@ Ws := EvHttpServer clone do(
     run := method(
         super(run)
         Coroutine currentCoroutine pause
-        //loop(yield)
+        loop(yield)
     )
 ) setHost("0.0.0.0") setPort(8090) setRequestHandlerProto(WsRequestHandler)
 
