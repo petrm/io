@@ -118,6 +118,13 @@ Input := Element clone do(
 )
 
 InputButton := Input clone do(
+    attributes atPut("type", "button")
+
+    with := method(value,
+        attributes atPut("value", value)
+        return self
+    )
+
 )
 
 InputImage := Input clone do(
@@ -160,6 +167,12 @@ Reset := Input clone do(
 )
 
 Submit := Input clone do(
+    attributes atPut("type", "submit")
+
+    with := method(value,
+        attributes atPut("value", value)
+        return self
+    )
 )
 
 Text := Input clone do(
@@ -184,9 +197,9 @@ Label := Element clone do(
         return self
     )
 )
-
+/*
 Button := Element clone do(
-    tag := "body"
+    tag := "button"
 
     appendProto(EventsMixin)
 
@@ -224,4 +237,4 @@ Button := Element clone do(
         attributes atPut("value", value)
         return self
     )
-)
+)*/

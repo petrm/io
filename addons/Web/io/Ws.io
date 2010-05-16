@@ -16,7 +16,7 @@ WsRequestHandler := Object clone do(
                 f close
                 response statusCode := 200
                 response responseMessage := "OK"
-                response headers atPut("Content-Type", "image/png")
+                response headers atPut("Content-Type", Ws staticContent at(pSuffix))
             )
             e catch(Exception,
                 logger error(e error)
@@ -35,7 +35,8 @@ WsRequestHandler := Object clone do(
         ) else(
             response = Ws error404(response)
         )
-        response asyncSend
+        request println
+        response asyncCometStart
         commonLog := Sequence with("#{request headers at(\"host\")} - - [#{Date}] ")
         commonLog appendSeq("\"#{request httpMethod} #{request path} ")
         commonLog appendSeq("HTTP/1.1\" ")

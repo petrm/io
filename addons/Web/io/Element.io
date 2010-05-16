@@ -13,6 +13,11 @@ Element := Object clone do(
         self children := list clone
     )
 
+    as := method(t,
+        tag = t
+        return self
+    )
+
     with := method(
         s := self clone
         call message arguments foreach(arg,

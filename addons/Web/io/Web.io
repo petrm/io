@@ -1,5 +1,6 @@
 Logging
 CommonElements
+Form
 
 Web := Object clone do(
     control := Div with(
