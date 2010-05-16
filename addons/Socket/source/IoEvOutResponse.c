@@ -34,6 +34,9 @@ IoEvOutResponse *IoEvOutResponse_proto(void *state)
 		IoMethodTable methodTable[] = {
 		{"requestId", IoEvOutResponse_requestId},
 		{"asyncSend", IoEvOutResponse_asyncSend},
+		{"asyncCometStart", IoEvOutResponse_asyncCometStart},
+		{"asyncCometChunk", IoEvOutResponse_asyncCometChunk},
+		{"asyncCometEnd", IoEvOutResponse_asyncCometEnd},
 		{NULL, NULL},
 		};
 
@@ -148,6 +151,60 @@ IoObject *IoEvOutResponse_asyncSend(IoEvOutResponse *self, IoObject *locals, IoM
 	//evhttp_send_reply_end(req);
 	evbuffer_free(buf);
 	
+	return self;
+}
+
+IoObject *IoEvOutResponse_asyncCometStart(IoEvOutResponse *self, IoObject *locals, IoMessage *m)
+{
+    IoEvOutResponse_writeResponseHeaders(self);
+	
+	IoSeq *data = IoObject_seqGetSlot_(self, IOSYMBOL("data"));
+	IoSeq *responseMessage = IoObject_seqGetSlot_(self, IOSYMBOL("responseMessage"));
+	int statusCode = IoObject_doubleGetSlot_(self, IOSYMBOL("statusCode"));
+	struct evhttp_request *req = REQUEST(self);
+
+	struct evbuffer *buf = evbuffer_new();
+	evbuffer_add(buf, IOSEQ_BYTES(data), IOSEQ_LENGTH(data));
+	evhttp_send_reply(req, statusCode, CSTRING(responseMessage), buf);		
+	//evhttp_send_reply_end(req);
+	evbuffer_free(buf);
+
+	return self;
+}
+
+IoObject *IoEvOutResponse_asyncCometChunk(IoEvOutResponse *self, IoObject *locals, IoMessage *m)
+{
+    IoEvOutResponse_writeResponseHeaders(self);
+	
+	IoSeq *data = IoObject_seqGetSlot_(self, IOSYMBOL("data"));
+	IoSeq *responseMessage = IoObject_seqGetSlot_(self, IOSYMBOL("responseMessage"));
+	int statusCode = IoObject_doubleGetSlot_(self, IOSYMBOL("statusCode"));
+	struct evhttp_request *req = REQUEST(self);
+
+	struct evbuffer *buf = evbuffer_new();
+	evbuffer_add(buf, IOSEQ_BYTES(data), IOSEQ_LENGTH(data));
+	evhttp_send_reply(req, statusCode, CSTRING(responseMessage), buf);		
+	//evhttp_send_reply_end(req);
+	evbuffer_free(buf);
+
+	return self;
+}
+
+IoObject *IoEvOutResponse_asyncCometEnd(IoEvOutResponse *self, IoObject *locals, IoMessage *m)
+{
+    IoEvOutResponse_writeResponseHeaders(self);
+	
+	IoSeq *data = IoObject_seqGetSlot_(self, IOSYMBOL("data"));
+	IoSeq *responseMessage = IoObject_seqGetSlot_(self, IOSYMBOL("responseMessage"));
+	int statusCode = IoObject_doubleGetSlot_(self, IOSYMBOL("statusCode"));
+	struct evhttp_request *req = REQUEST(self);
+
+	struct evbuffer *buf = evbuffer_new();
+	evbuffer_add(buf, IOSEQ_BYTES(data), IOSEQ_LENGTH(data));
+	evhttp_send_reply(req, statusCode, CSTRING(responseMessage), buf);		
+	//evhttp_send_reply_end(req);
+	evbuffer_free(buf);
+
 	return self;
 }
 

@@ -3,6 +3,7 @@ Logging
 
 WsRequestHandler := Object clone do(
     logger := Logging getLogger("Ws::handler")
+    logger format = "#{text}"
     handleRequest := method(request, response,
         //serve static content
         pSuffix := request path split("/") last split(".") last
@@ -23,20 +24,26 @@ WsRequestHandler := Object clone do(
             )
         //serve html
         ) elseif(Ws urls keys contains(request path)) then(
-            response data =  Doctype xhtml .. Ws urls at(request path) render
             response statusCode := 200
             response responseMessage := "OK"
             response headers atPut("Content-Type", "text/html; charset=utf-8")
+            if(request httpMethod == "GET") then(
+                response = Ws urls at(request path) get(request, response)
+            ) elseif(request httpMethod == "POST") then(
+                response = Ws urls at(request path) post(request, response)
+            )
         ) else(
             response = Ws error404(response)
         )
         response asyncSend
-        logHost := request headers at("host")
-        commonLog := Sequence with("#{logHost} - - #{Date} ")
+        commonLog := Sequence with("#{request headers at(\"host\")} - - [#{Date}] ")
         commonLog appendSeq("\"#{request httpMethod} #{request path} ")
+        commonLog appendSeq("HTTP/1.1\" ")
         //commonLog appendSeq("#{request version}\"")
         commonLog appendSeq("#{response statusCode} ")
-        commonLog appendSeq("#{response data size}")
+        commonLog appendSeq("#{response data size} ")
+        commonLog appendSeq("\"#{request headers at(\"referer\")}\" ")
+        commonLog appendSeq("#{request headers at(\"user-agent\")}")
         logger info(commonLog interpolate)
     )
 )
@@ -45,9 +52,7 @@ WsRequestHandler := Object clone do(
 Ws := EvHttpServer clone do(
     logger := Logging getLogger("Ws")
     logger info("Starting HTTP server")
-    staticPath := System launchScript split("/")
-    staticPath removeLast
-    staticPath = staticPath join("/") .. "/static/"
+    staticPath := System launchPath .. "/static/"
     logger info("Default static path: " .. staticPath)
     staticContent := Map with("png", "image/png",
                               "jpg", "image/jpeg",

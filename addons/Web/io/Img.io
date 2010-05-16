@@ -1,6 +1,8 @@
 Img := Element clone do(
     tag := "img"
 
+    appendProto(EventsMixin)
+
     with := method(value,
         s := self clone
         s attributes atPut("src", value)
@@ -39,6 +41,11 @@ Img := Element clone do(
     
     width := method(value,
         attributes atPut("width", value)
+        return self
+    )
+
+    onabort := method(value,
+        attributes atPut("onabort", value)
         return self
     )
 )

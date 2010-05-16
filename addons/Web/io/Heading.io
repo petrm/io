@@ -1,6 +1,8 @@
 Heading := Element clone do(
     tag := "h1"
 
+    appendProto(EventsMixin)
+
     huge := method(
         tag = "h6"
         return self

@@ -1,3 +1,6 @@
+Logging
+CommonElements
+
 Web := Object clone do(
     control := Div with(
         Style with(".bar {margin-left: 15px; margin-right: 15px;}

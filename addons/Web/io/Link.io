@@ -1,6 +1,8 @@
 Link := Element clone do(
     tag := "link"
 
+    appendProto(EventsMixin)
+
     rel := method(value,
         attributes atPut("rel", value)
         return self

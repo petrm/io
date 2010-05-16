@@ -9,9 +9,9 @@ Component := Element clone do(
     )
     
     render := method(out,
+        if(out == nil, out = "")
         if(halos == true) then(
             out = haloContainer render(out)
-            //haloContainer render println
         ) else(
             if((static == false) or (cache == nil)) then(
                 children foreach(i, child,
