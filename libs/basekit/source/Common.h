@@ -73,6 +73,7 @@ typedef long long int64_t;
 #define inline __inline
 #define snprintf _snprintf
 #define usleep(x) Sleep(((x)+999)/1000)
+#define ssize_t SSIZE_T
 
 #define HAS_FIBERS 1
 
