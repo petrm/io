@@ -94,3 +94,5 @@ cmake_install.cmake
 install_manifest.txt
 Makefile
 IoInstallPrefix.h
+.pida-metadata/*
+extras/osx/build/*
