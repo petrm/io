@@ -1,18 +1,18 @@
 Logger := Object clone do(
-    logLevel := 0
-    handlers := list clone
-    logLevels := Map clone
-    format := "#{mname} #{tstamp} #{fname}:#{fline} #{text}"
-    prefix := "root"
+    #handlers := list clone
+    #logLevel := 0
+    #logLevels := Map clone
+    #format := "#{mname} #{tstamp} #{fname}:#{fline} #{text}"
+    #prefix := "root"
     parent := nil
     propagate := true
 
     init := method(
-        handlers = list clone
-        logLevel = 0
-        logLevels = Map clone
-        format := "#{mname} #{tstamp} #{fname}:#{fline} #{text}"
-        prefix := "root"
+        self handlers := list clone
+        self logLevel := 0
+        self logLevels := Map clone
+        self format := "#{mname} #{tstamp} #{fname}:#{fline} #{text}"
+        self prefix := "root"
         addLogLevel("trace", 0)
         addLogLevel("debug", 10)
         addLogLevel("info", 20)
@@ -23,13 +23,15 @@ Logger := Object clone do(
 
     log := method(mname, text, fline, fname, tstamp,
         handlers foreach(handler,
-            format interpolate println
+            handler handle(format interpolate)
         )
     )
 
     setPrefix := method(pref,
         prefix := pref
     )
+
+    setFormat := method()
 
     addLogLevel := method(idname, level,
         logLevels atPut(idname, level)
