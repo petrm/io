@@ -1,0 +1,1 @@
+OauthTest := UnitTest clone do(	testBasic := method(		oauth := Oauth clone		oauth setConsumerKey("foo") setConsumerSecret("bar")		oauth		assertEquals(v, correct)	))
