@@ -3,6 +3,9 @@
 #
 # Builds the SGML addon
 
+# The addon has to be compiled as position independent code on new systems
+set(CMAKE_C_FLAGS "-fPIC")
+
 # Create the _build bundle hierarchy if needed.
 make_build_bundle(_build)
 set(BUILD_DIR ${CMAKE_CURRENT_BINARY_DIR}/_build)
@@ -35,3 +38,6 @@ target_link_libraries(IoSGML iovmall sgml)
 # Install the addon to our global addons hierarchy.
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/io/addons)
 install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/_build DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/io/addons/SGML)
+
+# Unset the flag
+set(CMAKE_C_FLAGS)
