@@ -96,3 +96,5 @@ Makefile
 IoInstallPrefix.h
 xcuserdata
 build
+_build
+src/iovm/source/IoInstallPrefix.h
