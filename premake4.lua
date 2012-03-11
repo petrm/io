@@ -65,25 +65,7 @@ solution "Io"
         linkoptions "-Wl,-rpath,'$ORIGIN/../lib'"
 
 
-    project "io2c"
-        --uuid "62df2010-1955-11e1-bddb-0800200c9a66"
-        location "_build"
-        targetdir "_build/bin"
-        kind "ConsoleApp"
-        language "C"
-        objdir "_build/objs"
-        files { "src/tools/source/io2c.c" }
-        flags { "ExtraWarnings",
-                "StaticRuntime",
-                "EnableSSE",
-                "EnableSSE2"
-              }
 
-        io_src="../src/iovm/io/A0_List.io ../src/iovm/io/A1_OperatorTable.io ../src/iovm/io/A2_Object.io ../src/iovm/io/A3_List.io ../src/iovm/io/A4_Exception.io ../src/iovm/io/Actor.io ../src/iovm/io/AddonLoader.io ../src/iovm/io/B_Sequence.io ../src/iovm/io/Block.io ../src/iovm/io/CFunction.io ../src/iovm/io/Date.io ../src/iovm/io/Debugger.io ../src/iovm/io/Directory.io ../src/iovm/io/DynLib.io ../src/iovm/io/Error.io ../src/iovm/io/File.io ../src/iovm/io/List_schwartzian.io ../src/iovm/io/Map.io ../src/iovm/io/Message.io ../src/iovm/io/Number.io ../src/iovm/io/Profiler.io ../src/iovm/io/Sandbox.io ../src/iovm/io/Serialize.io ../src/iovm/io/System.io ../src/iovm/io/UnitTest.io ../src/iovm/io/Vector.io ../src/iovm/io/Y_Path.io ../src/iovm/io/Z_CLI.io ../src/iovm/io/Z_Importer.io"
-
-
-	    postbuildcommands { "bin/io2c VMCode IoState_doString_ " .. io_src .. " > IoVMInit.c" }
-        postbuildcommands { "echo \"#define INSTALL_PREFIX \"./\"\" > ../src/iovm/source/IoInstallPrefix.h" }
 
 -- FIXME: this requires a file name, which we don't have here yet.
 --    configuration { "macosx", "gmake" }
@@ -182,6 +164,7 @@ solution "Io"
         configuration { "macosx", "gmake" }
             linkoptions "-wl,-install_name,'../lib/libgarbagecollector.dylib'"
 
+        postbuildcommands { "echo '#define INSTALL_PREFIX \"./\"' > ../src/iovm/source/IoInstallPrefix.h" }
 
     project "iovm"
         --uuid "62df2010-1955-11e1-bddb-0800200c9a66"
@@ -216,7 +199,23 @@ solution "Io"
         configuration { "macosx", "gmake" }
             linkoptions "-wl,-install_name,'../lib/libiovm.dylib'"
 
+    project "io2c"
+        --uuid "62df2010-1955-11e1-bddb-0800200c9a66"
+        location "_build"
+        targetdir "_build/bin"
+        kind "ConsoleApp"
+        language "C"
+        objdir "_build/objs"
+        files { "src/tools/source/io2c.c" }
+        flags { "ExtraWarnings",
+                "StaticRuntime",
+                "EnableSSE",
+                "EnableSSE2"
+              }
 
+        io_src="../src/iovm/io/A0_List.io ../src/iovm/io/A0_Object.io ../src/iovm/io/A1_OperatorTable.io ../src/iovm/io/A2_Object.io ../src/iovm/io/A3_List.io ../src/iovm/io/A4_Exception.io ../src/iovm/io/Actor.io ../src/iovm/io/AddonLoader.io ../src/iovm/io/B_Sequence.io ../src/iovm/io/Block.io ../src/iovm/io/CFunction.io ../src/iovm/io/Date.io ../src/iovm/io/Debugger.io ../src/iovm/io/Directory.io ../src/iovm/io/DynLib.io ../src/iovm/io/Error.io ../src/iovm/io/File.io ../src/iovm/io/List_schwartzian.io ../src/iovm/io/Map.io ../src/iovm/io/Message.io ../src/iovm/io/Number.io ../src/iovm/io/Profiler.io ../src/iovm/io/Sandbox.io ../src/iovm/io/Serialize.io ../src/iovm/io/System.io ../src/iovm/io/UnitTest.io ../src/iovm/io/Vector.io ../src/iovm/io/Y_Path.io ../src/iovm/io/Z_CLI.io ../src/iovm/io/Z_Importer.io"
+
+	    postbuildcommands { "bin/io2c VMCode IoState_doString_ " .. io_src .. " > IoVMInit.c" }
 
     project "io"
         --uuid "62df2010-1955-11e1-bddb-0800200c9a66"
